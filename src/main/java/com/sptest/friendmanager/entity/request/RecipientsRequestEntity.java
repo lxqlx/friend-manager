@@ -9,18 +9,18 @@ import lombok.Value;
 
 @Value
 @NoArgsConstructor(force = true, access = AccessLevel.PACKAGE)
-@JsonDeserialize(builder = RecipientsRequestEntity.Builder.class)
+@JsonDeserialize(builder = RecipientsRequestEntity.RecipientsRequestEntityBuilder.class)
 public class RecipientsRequestEntity {
     private final String sender;
     private final String text;
 
-    @lombok.Builder(builderClassName = "Builder")
+    @lombok.Builder
     private RecipientsRequestEntity(String sender, String text) {
         this.sender = sender;
         this.text = text;
     }
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class Builder {
+    public static class RecipientsRequestEntityBuilder {
     }
 }

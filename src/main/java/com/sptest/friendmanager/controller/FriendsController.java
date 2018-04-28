@@ -8,7 +8,6 @@ import com.sptest.friendmanager.entity.request.RecipientsRequestEntity;
 import com.sptest.friendmanager.entity.response.GeneralResponseEntity;
 import com.sptest.friendmanager.service.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -27,17 +25,9 @@ public class FriendsController {
     @RequestMapping(method = RequestMethod.PUT, path = "/friends")
     public ResponseEntity<GeneralResponseEntity> addFriends(@RequestBody FriendsRequestEntity friendsRequestEntity) {
         List<String> friends = friendsRequestEntity.getFriends();
-        if (friends.size() != 2) {
-            return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(FriendManagerUtils.failureResponseWithErrorMessage("Illegal Number of Emails"));
-        }
-
-        GeneralResponseEntity generalResponseEntity = FriendManagerUtils.validateEmailList(friends);
-        if (!generalResponseEntity.isSuccess()) {
-            return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(generalResponseEntity);
+        GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
+        if (!FriendManagerUtils.isEmailListValid(friends, resultBuilder)) {
+            return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
         return ResponseEntity.ok(relationshipService.addFriends(friends.get(0), friends.get(1)));
@@ -48,11 +38,9 @@ public class FriendsController {
     public ResponseEntity<?> getFriends(@RequestBody EmailRequestEntity emailRequestEntity) {
         String email = emailRequestEntity.getEmail();
 
-        GeneralResponseEntity generalResponseEntity = FriendManagerUtils.validateEmailList(Arrays.asList(email));
-        if (!generalResponseEntity.isSuccess()) {
-            return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(generalResponseEntity);
+        GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
+        if (!FriendManagerUtils.isEmailValid(email, resultBuilder)) {
+            return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
         return ResponseEntity.ok(relationshipService.getFriends(email));
@@ -61,17 +49,10 @@ public class FriendsController {
     @RequestMapping(method = RequestMethod.GET, path = "/common-friends")
     public ResponseEntity<?> getFriends(@RequestBody FriendsRequestEntity friendsRequestEntity) {
         List<String> friends = friendsRequestEntity.getFriends();
-        if (friends.size() != 2) {
-            return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(FriendManagerUtils.failureResponseWithErrorMessage("Illegal Number of Emails"));
-        }
 
-        GeneralResponseEntity generalResponseEntity = FriendManagerUtils.validateEmailList(friends);
-        if (!generalResponseEntity.isSuccess()) {
-            return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(generalResponseEntity);
+        GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
+        if (!FriendManagerUtils.isEmailListValid(friends, resultBuilder)) {
+            return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
         return ResponseEntity.ok(relationshipService.getCommonFriends(friends.get(0), friends.get(1)));
@@ -82,11 +63,10 @@ public class FriendsController {
     public ResponseEntity<?> addFollowers(@RequestBody FollowOrBlockRequestEntity followOrBlockRequestEntity) {
         String requestor = followOrBlockRequestEntity.getRequestor();
         String target = followOrBlockRequestEntity.getTarget();
-        GeneralResponseEntity generalResponseEntity = FriendManagerUtils.validateEmailList(Arrays.asList(requestor, target));
-        if (!generalResponseEntity.isSuccess()) {
-            return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(generalResponseEntity);
+
+        GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
+        if (!FriendManagerUtils.isEmailValid(requestor, resultBuilder) || !FriendManagerUtils.isEmailValid(target, resultBuilder)) {
+            return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
         return ResponseEntity.ok(relationshipService.follow(requestor, target));
@@ -97,11 +77,10 @@ public class FriendsController {
     public ResponseEntity<?> addBlockers(@RequestBody FollowOrBlockRequestEntity followOrBlockRequestEntity) {
         String requestor = followOrBlockRequestEntity.getRequestor();
         String target = followOrBlockRequestEntity.getTarget();
-        GeneralResponseEntity generalResponseEntity = FriendManagerUtils.validateEmailList(Arrays.asList(requestor, target));
-        if (!generalResponseEntity.isSuccess()) {
-            return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(generalResponseEntity);
+
+        GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
+        if (!FriendManagerUtils.isEmailValid(requestor, resultBuilder) || !FriendManagerUtils.isEmailValid(target, resultBuilder)) {
+            return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
         return ResponseEntity.ok(relationshipService.block(requestor, target));
@@ -112,17 +91,15 @@ public class FriendsController {
     public ResponseEntity<?> getRecipients(@RequestBody RecipientsRequestEntity recipientsRequestEntity) {
         String sender = recipientsRequestEntity.getSender();
         String text = recipientsRequestEntity.getText();
-        GeneralResponseEntity generalResponseEntity = FriendManagerUtils.validateEmailList(Arrays.asList(sender));
-        if (!generalResponseEntity.isSuccess()) {
-            return ResponseEntity.badRequest()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(generalResponseEntity);
+
+        GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
+        if (!FriendManagerUtils.isEmailValid(sender, resultBuilder)) {
+            return ResponseEntity.badRequest().body(resultBuilder.build());
+        }
+        if (text == null || text.isEmpty()) {
+            return ResponseEntity.badRequest().body(resultBuilder.errorMessage("Illegal Arguments: null or empty text"));
         }
 
-        return ResponseEntity.ok(relationshipService.getRecipients(sender, text));
+        return FriendManagerUtils.tryToReturn(() -> ResponseEntity.ok(relationshipService.getRecipients(sender, text)));
     }
-
-
-
-
 }

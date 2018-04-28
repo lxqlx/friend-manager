@@ -5,8 +5,11 @@ import com.sptest.friendmanager.db.model.RelationshipKey;
 import com.sptest.friendmanager.entity.response.FriendListResponseEntity;
 import com.sptest.friendmanager.entity.response.GeneralResponseEntity;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,7 +23,7 @@ public class FriendManagerUtils {
                 .map(FriendRelationshipDto::getRelationshipKey)
                 .map(RelationshipKey::getTargetEmail)
                 .collect(Collectors.toList());
-        return FriendListResponseEntity.builder().success(true).friends(friendsList).build();
+        return new FriendListResponseEntity(true, friendsList);
     }
 
     public static GeneralResponseEntity failureResponseWithErrorMessage(String message) {
@@ -41,27 +44,51 @@ public class FriendManagerUtils {
                 .map(FriendRelationshipDto::getRelationshipKey)
                 .map(RelationshipKey::getTargetEmail)
                 .filter(set::contains).collect(Collectors.toList());
-        return FriendListResponseEntity.builder().success(true).friends(result).build();
+        return new FriendListResponseEntity(true, result);
 
     }
 
-    public static GeneralResponseEntity validateEmailList(List<String> emails) {
+    public static boolean isEmailListValid(List<String> emails, GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder) {
+        if (emails.size() != 2) {
+            resultBuilder.success(false).errorMessage("Illegal Arguments: Expecting 2 emails in the list.");
+            return false;
+        }
         Set<String> emailsSet = new HashSet<>();
         for (String email : emails) {
             if (emailsSet.contains(email)) {
-                return FriendManagerUtils.failureResponseWithErrorMessage("Illegal Arguments: duplicated email.");
+                resultBuilder.success(false).errorMessage("Illegal Arguments: Duplicated email.");
+                return false;
             }
-            if (email == null || email.isEmpty()) {
-                return FriendManagerUtils.failureResponseWithErrorMessage("Illegal Arguments: empty email");
-            }
-            if (EmailValidator.getInstance().isValid(email)) {
-                return FriendManagerUtils.failureResponseWithErrorMessage("Illegal Arguments: invalid  email");
+
+            if (!isEmailValid(email, resultBuilder)) {
+                return false;
             }
 
             emailsSet.add(email);
         }
-        return FriendManagerUtils.successResponse();
+        resultBuilder.success(true);
+        return true;
+    }
 
+    public static boolean isEmailValid(String email, GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder) {
+        if (email == null || email.isEmpty()) {
+            resultBuilder.success(false).errorMessage("Illegal Arguments: empty email");
+            return false;
+        }
+        if (EmailValidator.getInstance().isValid(email)) {
+            resultBuilder.success(false).errorMessage("Illegal Arguments: invalid  email");
+            return false;
+        }
+        resultBuilder.success(true);
+        return true;
+    }
+
+    public static ResponseEntity<?> tryToReturn(Supplier<?> supplier) {
+        try {
+            return ResponseEntity.ok(supplier.get());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(failureResponseWithErrorMessage(e.getMessage()));
+        }
     }
 
     public static List<String> extractEmails(String text) {

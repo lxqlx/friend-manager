@@ -7,18 +7,18 @@ import lombok.*;
 
 @Value
 @NoArgsConstructor(force = true, access = AccessLevel.PACKAGE)
-@JsonDeserialize(builder = FollowOrBlockRequestEntity.Builder.class)
+@JsonDeserialize(builder = FollowOrBlockRequestEntity.FollowOrBlockRequestEntityBuilder.class)
 public class FollowOrBlockRequestEntity {
     private final String requestor;
     private final String target;
 
-    @lombok.Builder(builderClassName = "Builder")
+    @lombok.Builder
     private FollowOrBlockRequestEntity(String requestor, String target) {
         this.requestor = requestor;
         this.target = target;
     }
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class Builder {
+    public static class FollowOrBlockRequestEntityBuilder {
     }
 }

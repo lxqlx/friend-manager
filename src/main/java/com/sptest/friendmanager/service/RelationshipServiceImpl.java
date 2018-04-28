@@ -95,7 +95,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         friends.addAll(FriendManagerUtils.extractEmails(text));
         friends.removeAll(blockers);
 
-        return RecipientsListResponseEntity.builder().success(true).recipients(new ArrayList<>(friends)).build();
+        return new RecipientsListResponseEntity(true, new ArrayList<>(friends));
     }
 
 }

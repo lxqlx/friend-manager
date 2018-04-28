@@ -14,17 +14,11 @@ import java.util.List;
 @Value
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(force = true, access = AccessLevel.PACKAGE)
-@JsonDeserialize(builder = RecipientsListResponseEntity.Builder.class)
 public class RecipientsListResponseEntity extends GeneralResponseEntity {
     private final List<String> recipients;
 
-    @lombok.Builder(builderClassName = "Builder")
-    private RecipientsListResponseEntity(boolean success, List<String> recipients) {
+    public RecipientsListResponseEntity(boolean success, List<String> recipients) {
         super(success);
         this.recipients = recipients == null ?  Collections.emptyList() : Collections.unmodifiableList(recipients);
-    }
-
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class Builder{
     }
 }

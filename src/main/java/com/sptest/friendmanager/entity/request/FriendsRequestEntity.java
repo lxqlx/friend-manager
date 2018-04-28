@@ -10,16 +10,16 @@ import java.util.List;
 
 @Value
 @NoArgsConstructor(force = true, access = AccessLevel.PACKAGE)
-@JsonDeserialize(builder = FriendsRequestEntity.Builder.class)
+@JsonDeserialize(builder = FriendsRequestEntity.FriendsRequestEntityBuilder.class)
 public class FriendsRequestEntity {
     private List<String> friends;
 
-    @lombok.Builder(builderClassName = "Builder")
+    @lombok.Builder
     private FriendsRequestEntity(List<String> friends) {
         this.friends = Collections.unmodifiableList(friends);
     }
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class Builder {
+    public static class FriendsRequestEntityBuilder {
     }
 }

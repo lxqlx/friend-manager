@@ -8,16 +8,16 @@ import lombok.Value;
 
 @Value
 @NoArgsConstructor(force = true, access = AccessLevel.PACKAGE)
-@JsonDeserialize(builder = EmailRequestEntity.Builder.class)
+@JsonDeserialize(builder = EmailRequestEntity.EmailRequestEntityBuilder.class)
 public class EmailRequestEntity {
     private final String email;
 
-    @lombok.Builder(builderClassName = "Builder")
+    @lombok.Builder
     private EmailRequestEntity(String email) {
         this.email = email;
     }
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class Builder {
+    public static class EmailRequestEntityBuilder {
     }
 }
