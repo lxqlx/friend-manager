@@ -45,7 +45,7 @@ public class FriendManagerUtils {
 
     }
 
-    public static GeneralResponseEntity validateArguments(String... emails) {
+    public static GeneralResponseEntity validateEmailList(List<String> emails) {
         Set<String> emailsSet = new HashSet<>();
         for (String email : emails) {
             if (emailsSet.contains(email)) {
@@ -61,6 +61,7 @@ public class FriendManagerUtils {
             emailsSet.add(email);
         }
         return FriendManagerUtils.successResponse();
+
     }
 
     public static List<String> extractEmails(String text) {
