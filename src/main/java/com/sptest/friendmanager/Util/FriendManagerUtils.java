@@ -4,12 +4,16 @@ import com.sptest.friendmanager.db.model.FriendRelationshipDto;
 import com.sptest.friendmanager.db.model.RelationshipKey;
 import com.sptest.friendmanager.entity.response.FriendListResponseEntity;
 import com.sptest.friendmanager.entity.response.GeneralResponseEntity;
-import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class DtoToEntityUtils {
+public class FriendManagerUtils {
+    private static Pattern SIMPLE_EMAIL_PATTERN = Pattern.compile("[a-zA-Z0-9-_.]+@[a-zA-Z0-9-_.]+");
+
     public static FriendListResponseEntity toFriendsListResponseEntity(List<FriendRelationshipDto> dtoList) {
         List<String> friendsList = dtoList
                 .stream()
@@ -45,17 +49,31 @@ public class DtoToEntityUtils {
         Set<String> emailsSet = new HashSet<>();
         for (String email : emails) {
             if (emailsSet.contains(email)) {
-                return DtoToEntityUtils.failureResponseWithErrorMessage("Illegal Arguments: duplicated user id.");
+                return FriendManagerUtils.failureResponseWithErrorMessage("Illegal Arguments: duplicated email.");
             }
             if (email == null || email.isEmpty()) {
-                return DtoToEntityUtils.failureResponseWithErrorMessage("Illegal Arguments: empty user id");
+                return FriendManagerUtils.failureResponseWithErrorMessage("Illegal Arguments: empty email");
             }
+            if (EmailValidator.getInstance().isValid(email)) {
+                return FriendManagerUtils.failureResponseWithErrorMessage("Illegal Arguments: invalid  email");
+            }
+
             emailsSet.add(email);
         }
-        return DtoToEntityUtils.successResponse();
+        return FriendManagerUtils.successResponse();
     }
 
     public static List<String> extractEmails(String text) {
-        return null;
+        Set<String> emailSet = new HashSet<>();
+        Matcher matcher = SIMPLE_EMAIL_PATTERN.matcher(text);
+        EmailValidator validator = EmailValidator.getInstance();
+        String currentEmail;
+        while(matcher.find()) {
+            currentEmail = matcher.group();
+            if (validator.isValid(currentEmail)) {
+                emailSet.add(matcher.group());
+            }
+        }
+        return new ArrayList<>(emailSet);
     }
 }
