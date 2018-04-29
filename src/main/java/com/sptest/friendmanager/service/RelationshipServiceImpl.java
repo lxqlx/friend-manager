@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,10 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     @Override
     public GeneralResponseEntity follow(@NonNull String requestor, @NonNull String target) {
-        blockerRepository.delete(new BlockerRelationshipDto(requestor, target));
+        RelationshipKey key = new RelationshipKey(requestor, target);
+        if (blockerRepository.existsById(key)) {
+            blockerRepository.deleteById(key);
+        }
         followerRepository.save(new FollowerRelationshipDto(requestor, target));
         return FriendManagerUtils.successResponse();
     }
@@ -86,19 +90,14 @@ public class RelationshipServiceImpl implements RelationshipService {
                 .map(FriendRelationshipDto::getRelationshipKey)
                 .map(RelationshipKey::getTargetEmail)
                 .collect(Collectors.toSet());
-
-        Set<String> followers = followerRepository.findByRelationshipKeyRequestEmail(sender).stream()
-                .map(FollowerRelationshipDto::getRelationshipKey)
-                .map(RelationshipKey::getTargetEmail)
-                .collect(Collectors.toSet());
-
-        Set<String> blockers = blockerRepository.findByRelationshipKeyTargetEmail(sender).stream()
-                .map(BlockerRelationshipDto::getRelationshipKey)
-                .map(RelationshipKey::getTargetEmail)
-                .collect(Collectors.toSet());
+        List<String> followers = followerRepository.findByRelationshipKeyTargetEmail(sender).stream()
+                .map(FollowerRelationshipDto::getRelationshipKey).map(RelationshipKey::getRequestEmail).collect(Collectors.toList());
+        List<String> blockers = blockerRepository.findByRelationshipKeyTargetEmail(sender).stream()
+                .map(BlockerRelationshipDto::getRelationshipKey).map(RelationshipKey::getRequestEmail).collect(Collectors.toList());
 
         friends.addAll(followers);
         friends.addAll(FriendManagerUtils.extractEmails(text));
+        friends.remove(sender);
         friends.removeAll(blockers);
 
         return new RecipientsListResponseEntity(true, new ArrayList<>(friends));

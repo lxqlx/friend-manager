@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 @Transactional
 public interface FollowerRepository extends JpaRepository<FollowerRelationshipDto, RelationshipKey> {
-    List<FollowerRelationshipDto> findByRelationshipKeyRequestEmail(String requestEmail);
+    List<FollowerRelationshipDto> findByRelationshipKeyTargetEmail(String targetEmail);
 }

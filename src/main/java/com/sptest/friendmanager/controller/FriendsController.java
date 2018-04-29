@@ -12,6 +12,7 @@ import com.sptest.friendmanager.service.RelationshipService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.collections.ArrayStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -108,7 +110,7 @@ public class FriendsController {
         String target = followOrBlockRequestEntity.getTarget();
 
         GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
-        if (!FriendManagerUtils.isEmailValid(requestor, resultBuilder) || !FriendManagerUtils.isEmailValid(target, resultBuilder)) {
+        if (!FriendManagerUtils.isEmailListValid(Arrays.asList(requestor, target), resultBuilder)) {
             return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
@@ -129,7 +131,7 @@ public class FriendsController {
         String target = followOrBlockRequestEntity.getTarget();
 
         GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
-        if (!FriendManagerUtils.isEmailValid(requestor, resultBuilder) || !FriendManagerUtils.isEmailValid(target, resultBuilder)) {
+        if (!FriendManagerUtils.isEmailListValid(Arrays.asList(requestor, target), resultBuilder)) {
             return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
