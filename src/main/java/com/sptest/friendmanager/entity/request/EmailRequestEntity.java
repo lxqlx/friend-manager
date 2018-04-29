@@ -11,7 +11,8 @@ import lombok.Value;
 @NoArgsConstructor(force = true, access = AccessLevel.PACKAGE)
 @JsonDeserialize(builder = EmailRequestEntity.EmailRequestEntityBuilder.class)
 public class EmailRequestEntity {
-    @ApiModelProperty(notes = "Email address you want to retrieve friends list for")
+    @ApiModelProperty(notes = "Email address you want to retrieve friends list for",
+            example = "andy@example.com")
     private final String email;
 
     @lombok.Builder

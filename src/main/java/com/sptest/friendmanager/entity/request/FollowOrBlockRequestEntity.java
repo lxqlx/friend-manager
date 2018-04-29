@@ -11,10 +11,12 @@ import lombok.*;
 @JsonDeserialize(builder = FollowOrBlockRequestEntity.FollowOrBlockRequestEntityBuilder.class)
 public class FollowOrBlockRequestEntity {
 
-    @ApiModelProperty(notes = "Requester Email Address, put a valid email different from target address")
+    @ApiModelProperty(notes = "Requester Email Address, put a valid email different from target address",
+            example = "andy@example.com")
     private final String requestor;
 
-    @ApiModelProperty(notes = "Target Email Address, put a valid email different from requester address")
+    @ApiModelProperty(notes = "Target Email Address, put a valid email different from requester address",
+            example = "john@example.com")
     private final String target;
 
     @lombok.Builder

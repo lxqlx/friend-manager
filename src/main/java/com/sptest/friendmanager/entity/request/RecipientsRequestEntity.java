@@ -13,10 +13,12 @@ import lombok.Value;
 @JsonDeserialize(builder = RecipientsRequestEntity.RecipientsRequestEntityBuilder.class)
 public class RecipientsRequestEntity {
 
-    @ApiModelProperty(notes = "Sender email address, put valid email address")
+    @ApiModelProperty(notes = "Sender email address, put valid email address",
+            example = "andy@example.com")
     private final String sender;
 
-    @ApiModelProperty(notes = "The update sent by sender")
+    @ApiModelProperty(notes = "The update sent by sender",
+            example = "Hi john@example.com")
     private final String text;
 
     @lombok.Builder

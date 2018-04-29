@@ -13,7 +13,8 @@ import java.util.List;
 @NoArgsConstructor(force = true, access = AccessLevel.PACKAGE)
 @JsonDeserialize(builder = FriendsRequestEntity.FriendsRequestEntityBuilder.class)
 public class FriendsRequestEntity {
-    @ApiModelProperty(notes = "Put exactly 2 different valid email addresses")
+    @ApiModelProperty(notes = "Put exactly 2 different valid email addresses",
+            example = "[ \"andy@example.com\", \"john@example.com\"]")
     private List<String> friends;
 
     @lombok.Builder
