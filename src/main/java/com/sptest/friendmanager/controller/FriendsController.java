@@ -34,7 +34,7 @@ public class FriendsController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/friends")
+    @RequestMapping(method = RequestMethod.POST, path = "/friends")
     public ResponseEntity<?> getFriends(@RequestBody EmailRequestEntity emailRequestEntity) {
         String email = emailRequestEntity.getEmail();
 
@@ -46,7 +46,7 @@ public class FriendsController {
         return ResponseEntity.ok(relationshipService.getFriends(email));
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/common-friends")
+    @RequestMapping(method = RequestMethod.POST, path = "/common-friends")
     public ResponseEntity<?> getFriends(@RequestBody FriendsRequestEntity friendsRequestEntity) {
         List<String> friends = friendsRequestEntity.getFriends();
 
@@ -87,7 +87,7 @@ public class FriendsController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/recipients")
+    @RequestMapping(method = RequestMethod.POST, path = "/recipients")
     public ResponseEntity<?> getRecipients(@RequestBody RecipientsRequestEntity recipientsRequestEntity) {
         String sender = recipientsRequestEntity.getSender();
         String text = recipientsRequestEntity.getText();
