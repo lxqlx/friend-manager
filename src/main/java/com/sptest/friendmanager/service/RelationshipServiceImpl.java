@@ -25,14 +25,20 @@ import java.util.stream.Collectors;
 @Transactional
 public class RelationshipServiceImpl implements RelationshipService {
 
-    @Autowired
     private FriendRepository friendRepository;
 
-    @Autowired
     private FollowerRepository followerRepository;
 
-    @Autowired
     private BlockerRepository blockerRepository;
+
+    @Autowired
+    public RelationshipServiceImpl(FriendRepository friendRepository,
+                                   FollowerRepository followerRepository,
+                                   BlockerRepository blockerRepository) {
+        this.friendRepository = friendRepository;
+        this.followerRepository = followerRepository;
+        this.blockerRepository = blockerRepository;
+    }
 
 
     @Override
@@ -86,7 +92,7 @@ public class RelationshipServiceImpl implements RelationshipService {
                 .map(RelationshipKey::getTargetEmail)
                 .collect(Collectors.toSet());
 
-        Set<String> blockers = blockerRepository.findByRelationshipKeyRequestEmail(sender).stream()
+        Set<String> blockers = blockerRepository.findByRelationshipKeyTargetEmail(sender).stream()
                 .map(BlockerRelationshipDto::getRelationshipKey)
                 .map(RelationshipKey::getTargetEmail)
                 .collect(Collectors.toSet());

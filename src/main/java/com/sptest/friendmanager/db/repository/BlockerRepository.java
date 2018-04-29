@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 @Transactional
 public interface BlockerRepository extends JpaRepository<BlockerRelationshipDto, RelationshipKey> {
-    List<BlockerRelationshipDto> findByRelationshipKeyRequestEmail(String requestEmail);
+    List<BlockerRelationshipDto> findByRelationshipKeyTargetEmail(String targetEmail);
 }

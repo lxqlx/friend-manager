@@ -1,8 +1,5 @@
 package com.sptest.friendmanager.entity.response;
 
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;

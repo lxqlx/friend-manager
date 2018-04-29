@@ -24,8 +24,12 @@ import java.util.List;
 
 @RestController
 public class FriendsController {
+    private final RelationshipService relationshipService;
+
     @Autowired
-    RelationshipService relationshipService;
+    public FriendsController(RelationshipService relationshipService) {
+        this.relationshipService = relationshipService;
+    }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/friends", produces = "application/json")
     @ApiOperation(value = "Create a friend connection between two email addresses.", response = GeneralResponseEntity.class)
@@ -35,14 +39,14 @@ public class FriendsController {
             @ApiResponse(code = 500, message = "Server error")
     }
     )
-    public ResponseEntity<GeneralResponseEntity> addFriends(@RequestBody FriendsRequestEntity friendsRequestEntity) {
+    public ResponseEntity<?> addFriends(@RequestBody FriendsRequestEntity friendsRequestEntity) {
         List<String> friends = friendsRequestEntity.getFriends();
         GeneralResponseEntity.GeneralResponseEntityBuilder resultBuilder = GeneralResponseEntity.builder();
         if (!FriendManagerUtils.isEmailListValid(friends, resultBuilder)) {
             return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
-        return ResponseEntity.ok(relationshipService.addFriends(friends.get(0), friends.get(1)));
+        return FriendManagerUtils.tryToReturn(() -> relationshipService.addFriends(friends.get(0), friends.get(1)));
     }
 
 
@@ -65,7 +69,7 @@ public class FriendsController {
             return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
-        return ResponseEntity.ok(relationshipService.getFriends(email));
+        return FriendManagerUtils.tryToReturn(() -> relationshipService.getFriends(email));
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/common-friends", produces = "application/json")
@@ -87,7 +91,7 @@ public class FriendsController {
             return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
-        return ResponseEntity.ok(relationshipService.getCommonFriends(friends.get(0), friends.get(1)));
+        return FriendManagerUtils.tryToReturn(() -> relationshipService.getCommonFriends(friends.get(0), friends.get(1)));
     }
 
 
@@ -99,7 +103,7 @@ public class FriendsController {
             @ApiResponse(code = 500, message = "Server error")
     }
     )
-    public ResponseEntity<GeneralResponseEntity> addFollowers(@RequestBody FollowOrBlockRequestEntity followOrBlockRequestEntity) {
+    public ResponseEntity<?> addFollowers(@RequestBody FollowOrBlockRequestEntity followOrBlockRequestEntity) {
         String requestor = followOrBlockRequestEntity.getRequestor();
         String target = followOrBlockRequestEntity.getTarget();
 
@@ -108,7 +112,7 @@ public class FriendsController {
             return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
-        return ResponseEntity.ok(relationshipService.follow(requestor, target));
+        return FriendManagerUtils.tryToReturn(() -> relationshipService.follow(requestor, target));
     }
 
 
@@ -120,7 +124,7 @@ public class FriendsController {
             @ApiResponse(code = 500, message = "Server error")
     }
     )
-    public ResponseEntity<GeneralResponseEntity> addBlockers(@RequestBody FollowOrBlockRequestEntity followOrBlockRequestEntity) {
+    public ResponseEntity<?> addBlockers(@RequestBody FollowOrBlockRequestEntity followOrBlockRequestEntity) {
         String requestor = followOrBlockRequestEntity.getRequestor();
         String target = followOrBlockRequestEntity.getTarget();
 
@@ -129,7 +133,7 @@ public class FriendsController {
             return ResponseEntity.badRequest().body(resultBuilder.build());
         }
 
-        return ResponseEntity.ok(relationshipService.block(requestor, target));
+        return FriendManagerUtils.tryToReturn(() -> relationshipService.block(requestor, target));
     }
 
 
@@ -156,6 +160,6 @@ public class FriendsController {
             return ResponseEntity.badRequest().body(resultBuilder.errorMessage("Illegal Arguments: null or empty text"));
         }
 
-        return FriendManagerUtils.tryToReturn(() -> ResponseEntity.ok(relationshipService.getRecipients(sender, text)));
+        return FriendManagerUtils.tryToReturn(() -> relationshipService.getRecipients(sender, text));
     }
 }

@@ -1,6 +1,5 @@
 package com.sptest.friendmanager.db.model;
 
-import javax.management.relation.Relation;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;

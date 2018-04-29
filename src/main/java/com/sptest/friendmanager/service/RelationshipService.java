@@ -4,8 +4,6 @@ import com.sptest.friendmanager.entity.response.FriendListResponseEntity;
 import com.sptest.friendmanager.entity.response.GeneralResponseEntity;
 import com.sptest.friendmanager.entity.response.RecipientsListResponseEntity;
 
-import java.util.List;
-
 public interface RelationshipService {
 
     GeneralResponseEntity addFriends(String email1, String email2);
