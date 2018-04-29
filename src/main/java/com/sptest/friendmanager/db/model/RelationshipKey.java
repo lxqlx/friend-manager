@@ -1,5 +1,7 @@
 package com.sptest.friendmanager.db.model;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Email;
@@ -8,6 +10,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@NoArgsConstructor
 public class RelationshipKey implements Serializable {
 
     @Column(name = "requestor_email")
@@ -19,9 +22,6 @@ public class RelationshipKey implements Serializable {
     @Email
     @NotNull
     private String targetEmail;
-
-    public RelationshipKey() {
-    }
 
     public RelationshipKey(String requestEmail, String targetEmail) {
         this.requestEmail = requestEmail;

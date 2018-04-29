@@ -75,7 +75,7 @@ public class FriendManagerUtils {
             resultBuilder.success(false).errorMessage("Illegal Arguments: empty email");
             return false;
         }
-        if (EmailValidator.getInstance().isValid(email)) {
+        if (!EmailValidator.getInstance().isValid(email)) {
             resultBuilder.success(false).errorMessage("Illegal Arguments: invalid  email");
             return false;
         }
