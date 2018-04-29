@@ -1,7 +1,7 @@
 version : '3'
 services:
 
-  springappserver:
+  friend_manager_app_server:
     build:
       context: .
       dockerfile: springapp.dockerfile
@@ -12,9 +12,9 @@ services:
     volumes:
       - .:/vol/development
     depends_on:
-      - mysqldbserver
+      - friend_manager_mysql_server
 
-  mysqldbserver:
+  friend_manager_mysql_server:
     build:
       context: .
       dockerfile: mysqldb.dockerfile
@@ -27,7 +27,7 @@ services:
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
       MYSQL_ROOT_PASSWORD: myrootpassword
-    container_name: mysqldbserver
+    container_name: friend_manager_mysql_server
 
 networks:
   net-spring-db:
