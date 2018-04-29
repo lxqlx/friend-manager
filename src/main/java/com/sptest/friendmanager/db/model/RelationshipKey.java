@@ -10,7 +10,7 @@ import java.util.Objects;
 @Embeddable
 public class RelationshipKey implements Serializable {
 
-    @Column(name = "request_email")
+    @Column(name = "requestor_email")
     @Email
     @NotNull
     private String requestEmail;

@@ -3,8 +3,11 @@ package com.sptest.friendmanager.db.model;
 import javax.management.relation.Relation;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class RelationshipDto {
     @EmbeddedId
     RelationshipKey relationshipKey;
