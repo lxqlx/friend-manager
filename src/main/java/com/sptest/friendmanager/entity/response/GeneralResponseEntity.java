@@ -13,7 +13,7 @@ public class GeneralResponseEntity {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private final String errorMessage;
 
-    protected GeneralResponseEntity(boolean success) {
+    GeneralResponseEntity(boolean success) {
         this.success = success;
         this.errorMessage = null;
     }
