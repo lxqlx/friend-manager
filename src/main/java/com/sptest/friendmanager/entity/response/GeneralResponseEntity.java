@@ -1,6 +1,7 @@
 package com.sptest.friendmanager.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

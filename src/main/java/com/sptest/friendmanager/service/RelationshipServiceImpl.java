@@ -1,6 +1,6 @@
 package com.sptest.friendmanager.service;
 
-import com.sptest.friendmanager.Util.FriendManagerUtils;
+import com.sptest.friendmanager.util.FriendManagerUtils;
 import com.sptest.friendmanager.db.model.BlockerRelationshipDto;
 import com.sptest.friendmanager.db.model.FollowerRelationshipDto;
 import com.sptest.friendmanager.db.model.FriendRelationshipDto;

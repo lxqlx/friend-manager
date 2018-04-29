@@ -2,6 +2,7 @@ package com.sptest.friendmanager.entity.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Value;
@@ -11,7 +12,11 @@ import lombok.Value;
 @NoArgsConstructor(force = true, access = AccessLevel.PACKAGE)
 @JsonDeserialize(builder = RecipientsRequestEntity.RecipientsRequestEntityBuilder.class)
 public class RecipientsRequestEntity {
+
+    @ApiModelProperty(notes = "Sender email address, put valid email address")
     private final String sender;
+
+    @ApiModelProperty(notes = "The update sent by sender")
     private final String text;
 
     @lombok.Builder

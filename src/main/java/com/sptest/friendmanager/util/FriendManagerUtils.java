@@ -1,4 +1,4 @@
-package com.sptest.friendmanager.Util;
+package com.sptest.friendmanager.util;
 
 import com.sptest.friendmanager.db.model.FriendRelationshipDto;
 import com.sptest.friendmanager.db.model.RelationshipKey;
