@@ -7,12 +7,18 @@
     <groupId>com.sptest</groupId>
     <artifactId>friend-manager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.0.1.RELEASE</version>
     </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>com.sptest.friendmanager.FriendManagerApplication</start-class>
+    </properties>
 
     <dependencies>
         <dependency>
